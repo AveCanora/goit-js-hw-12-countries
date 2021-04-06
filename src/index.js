@@ -1,8 +1,10 @@
 import fetchCountries from './js/fetchCountries.js';
+import notify from './js/notify.js';
 import './css/styles.css';
 import { refs } from './js/refs.js';
 import countryOne from './templates/country-one.hbs';
 import countryTen from './templates/country-ten.hbs';
+
 const debounce = require('lodash.debounce');
 
 let nameCountry;
@@ -13,7 +15,7 @@ function getNameOfCountry() {
   nameCountry = refs.inputCountry.value;
   fetchCountries(nameCountry)
     .then(renderCountry)
-    .catch(error => console.log(error));
+    .catch(message => notify(message));
 }
 
 function renderCountry(country) {
@@ -24,7 +26,8 @@ function renderCountry(country) {
     refs.descrCountry.innerHTML = markup;
   } else if (numberCountries <= 10) {
     const markup = countryTen(country);
-    // refs.descrCountry.insertAdjacentHTML('beforeend', markup);
     refs.descrCountry.innerHTML = markup;
+  } else if (numberCountries > 10) {
+    notify('To many matches found. Please \nenter a more specific query!');
   }
 }
